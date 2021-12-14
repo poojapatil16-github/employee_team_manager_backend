@@ -9,8 +9,9 @@ const Task = mongoose.model(
       project: String,
       logs: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "log",
+            employee_code: String,
+            logedTime:String,
+            logStartDate:Date
         }
       ]
 

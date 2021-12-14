@@ -1,15 +1,15 @@
-const db = require("../models");
+const { team } = require("../models");
 const Team = require("../models/team.model");
 // const Employee = db.team;
 
 // Create and Save a new Tutorial
-exports.create = (req, res) => {
+exports.createTeam = (req, res) => {
   // Create a Team
   const team = new Team({
     name: req.body.name,
     startDate: req.body.startDate,
     endDate: req.body.endDate
-});
+  });
   // Save Team in the database
   team
     .save(team)
@@ -26,10 +26,13 @@ exports.create = (req, res) => {
 
 
 // Retrieve all Team from the database.
-exports.findAll = (req, res) => {
+exports.findTeams = (req, res) => {
   const name = req.query.name;
-  var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
-
+  if(name){
+      var condition = { name: name };
+  }else{
+      var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
+  }
   Team.find(condition)
     .then(data => {
       res.send(data);
@@ -45,65 +48,42 @@ exports.findAll = (req, res) => {
 
 
 // Update a Team by the name in the request
-exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
-    });
+exports.updateTeam = (req, res) => {
+  console.log("Inside update team",req.body.name);
+  const name = req.body.name;
+  if (!name) {
+      return res.status(400).send({
+          message: "Team name cannot be empty!"
+      });
   }
 
-  const name = req.params.name;
-
-  Team.findByNameAndUpdate(name, req.body, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update Team with name=${name}. Maybe Team was not found!`
-        });
-      } else res.send({ message: "Team was updated successfully." });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Team with name=" + name
-      });
-    });
+  var condition = { name: name };
+  team.updateOne(condition, req.body, function (err, data) {
+      if (err) {
+          res.send({ message: "Team not found, Please provide Valid team details to update" }, 400);
+      }
+      res.send({message:name+"  Team updated successfully"}, 200);
+  });
 };
 
 // Delete a Team with the specified name in the request
-exports.delete = (req, res) => {
-  const name = req.params.name;
-
-  Team.findByIdAndRemove(name, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot delete Team with name=${name}. Maybe Team was not found!`
-        });
-      } else {
-        res.send({
-          message: "Team was deleted successfully!"
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Team with name=" + name
-      });
+exports.deleteTeam = (req, res) => {
+  const name = req.query.name;
+  if(name){
+      var condition = { name: name };
+  }else{
+      var condition = {};
+  }
+  team.deleteMany(condition)
+  .then(data => {
+    res.send({
+      message: `${data.deletedCount} Teams deleted successfully!`
     });
-};
-
-// Delete all Teams from the database.
-exports.deleteAll = (req, res) => {
-  Team.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} Teams were deleted successfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all teams."
-      });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all teams."
     });
+  });
 };

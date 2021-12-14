@@ -10,32 +10,22 @@ module.exports = function(app) {
   });
 
   app.post(
-    "/api/employee/create",
+    "/api/v1/employee",
     controller.createEmployee
   );
 
   app.get(
-    "/api/employee/findAll",
-    controller.findAll
-  );
-
-  app.get(
-    "/api/employee/find/:name",
-    controller.findOne
+    "/api/v1/employee",
+    controller.findEmployees
   );
 
   app.put(
-    "/api/employee/update/:name",
-    controller.update
+    "/api/v1/employee",
+    controller.updateEmployee
   );
 
   app.delete(
-    "/api/employee/deleteAll",
-    controller.deleteAll
-  );
-
-  app.delete(
-    "/api/employee/delete/:name",
-    controller.delete
+    "/api/v1/employee",
+    controller.deleteEmployee
   );
 };

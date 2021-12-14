@@ -1,4 +1,3 @@
-const config = require("../config/auth.config");
 const { employee } = require("../models");
 const db = require("../models");
 const Employee = db.employee;
@@ -37,12 +36,32 @@ exports.createEmployee = (req, res) => {
     }
 };
 
+// Update a Employee by the name in the request
+exports.updateEmployee = (req, res) => {
+    const name = req.body.name;
+    if (!name) {
+        return res.status(400).send({
+            message: "Employee name cannot be empty!"
+        });
+    }
+
+    var condition = { name: name };
+    employee.updateOne(condition, req.body, function (err, data) {
+        if (err) {
+            res.send({ message: "Employee not found, Please provide Valid Details" }, 400);
+        }
+        res.send(data, 200);
+    });
+};
 
 // Retrieve all Employee from the database.
-exports.findAll = (req, res) => {
+exports.findEmployees = (req, res) => {
     const name = req.query.name;
-    var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
-
+    if(name){
+        var condition = { name: name };
+    }else{
+        var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
+    }
     Employee.find(condition)
         .then(data => {
             res.send(data);
@@ -55,71 +74,27 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Find a single Tutorial with an name
-exports.findOne = (req, res) => {
-    const name = req.params.name;
-
-    var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
-
-    employee.findOne(condition, (err, data) =>{
-        if(err){
-            res.send({
-                message:"Employee not found!"
-            },400);
-        }
-        res.send(data,200);
-    })
-};
-
-// Update a Team by the name in the request
-exports.update = (req, res) => {
-    if (!req.body) {
-        return res.status(400).send({
-            message: "Data to update can not be empty!"
-        });
-    }
-
+// Delete a Employee with the specified name in the request
+exports.deleteEmployee = (req, res) => {
+    console.log("delete ", req.params.name);
     const name = req.query.name;
-    var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
-    var newvalues = req.body;
-    employee.updateOne(condition, newvalues, function (err, data) {
-        if (err) {
-            throw err;
-        }
-        res.send(data);
+    if(name){
+        var condition = { name: name };
+    }else{
+        var condition = {};
+    }
+    employee.deleteMany(condition)
+    .then(data => {
+      res.send({
+        message: `${data.deletedCount} Employee deleted successfully!`
+      });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while removing all teams."
+      });
     });
 };
 
-// Delete all Employee from the database.
-exports.deleteAll = (req, res) => {
-    Employee.deleteMany({})
-      .then(data => {
-        res.send({
-          message: `${data.deletedCount} Employee were deleted successfully!`
-        });
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while removing all employee."
-        });
-      });
-  };
 
-  // Delete a Employee with the specified name in the request
-exports.delete = (req, res) => {
-    const name = req.params.name;
-  
-    var condition = name ? { name: { $regex: new RegExp(name), $options: "i" } } : {};
-
-    employee.deleteOne(condition, function(err, data) {
-        if (err) {
-            throw err
-        };
-        res.send({
-            message: "Deleted successfully!"
-        })
-      });
-  };
-  
-  

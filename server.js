@@ -3,8 +3,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dbConfig = require("./app/config/db.config");
 
-
 const app = express();
+
+var swaggerUi = require('swagger-ui-express');
+var swaggerDocument = require('./swagger.json');
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -45,6 +48,7 @@ require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/employee.routes")(app);
 require("./app/routes/team.routes")(app);
+require("./app/routes/task.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

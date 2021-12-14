@@ -1,0 +1,500 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Swagger CRUD",
+        	"description": "Swagger CRUD description",
+        	"contact": {
+            		"email": "poojapatil1696@gmail.com"
+        	}
+	},
+
+    "definitions": {
+		"name": {
+			"type": "string",
+			"description": "Name of employee",
+			"example": "testEmp"
+		},"code": {
+			"type": "string",
+			"description": "Code of employee or task",
+			"example": "testCode"
+		},"description": {
+			"type": "string",
+			"description": "description of task",
+			"example": "testDescription"
+		},"project": {
+			"type": "string",
+			"description": "project of task",
+			"example": "testproject"
+		},
+		"joinDate": {
+			"type": "date-time",
+			"description": "Joining Date",
+			"example": "2021-11-04T14:51:06.1579"
+		},
+		"startDate": {
+			"type": "date-time",
+			"description": "team start Date",
+			"example": "2021-11-04T14:51:06.1579"
+		},
+		"endDate": {
+			"type": "date-time",
+			"description": "team end Date",
+			"example": "2021-11-04T14:51:06.1579"
+		},
+		"teamCode": {
+			"type": "string",
+			"description": "team code",
+			"example": "Developement"
+		},
+		"skills": {
+			"type": "array",
+			"description": "Skills array",
+			"items": {}
+		},
+		"logs": {
+			"type": "array",
+			"description": "task log array",
+			"items": {
+				"$ref": "#/definitions/log"
+			}
+		},
+		"log": {
+			"type": "object",
+			"description": "log data",
+			"properties": {
+				"employee_code": {
+					"type": "string",
+					"description": "Error message",
+					"example": "Details not found"
+				},
+                "logedTime": {
+					"type": "string",
+					"description": "logedTime details",
+					"example": "600000"
+				},
+                "logStartDate": {
+					"type": "date-time",
+					"description": "log start time",
+					"example": "2012-11-04T14:51:06.157Z"
+				}
+			}
+		},
+		"error": {
+			"type": "object",
+			"description": "Error data",
+			"properties": {
+				"msg": {
+					"type": "string",
+					"description": "Error message",
+					"example": "Details not found"
+				}
+			}
+		},
+		"business_exception": {
+			"type": "array",
+			"description": "Error array",
+			"items": {
+				"$ref": "#/definitions/error"
+			}
+		}
+    },
+    "host": "localhost:8080",
+	"basePath": "/api/v1/",
+    "paths": {
+        "/team": {
+			"post": {
+				"tags": ["Team"],
+				"description": "Create Team",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "createTeam",
+						"required": ["name", "joinDate", "teamCode","skills"],
+						"in": "body",
+						"properties": {
+							"name": {
+								"$ref": "#/definitions/name"
+							},
+							"startDate": {
+								"$ref": "#/definitions/startDate"
+							},
+							"endDate": {
+								"$ref": "#/definitions/endDate"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "put": {
+				"tags": ["Team"],
+				"description": "update Team",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "updateTeam",
+						"required": ["name", "startDate", "endDate"],
+						"in": "body",
+						"properties": {
+							"name": {
+								"$ref": "#/definitions/name"
+							},
+							"startDate": {
+								"$ref": "#/definitions/startDate"
+							},
+							"endDate": {
+								"$ref": "#/definitions/endDate"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "get": {
+				"tags": ["Team"],
+				"description": "get all Team",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"type": "string",
+						"description": "name of the Team",
+						"example": "testEmp",
+						"defaultValue": "testEmp"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "delete": {
+				"tags": ["Team"],
+				"description": "delete all Team or by team name",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"type": "string",
+						"description": "name of the employee",
+						"example": "testEmp",
+						"defaultValue": "testEmp"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Employee Deleted Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			}
+		},
+
+		"/employee": {
+			"post": {
+				"tags": ["Employee"],
+				"description": "Create Employee",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "createEmp",
+						"required": ["name", "joinDate", "teamCode","skills"],
+						"in": "body",
+						"properties": {
+							"name": {
+								"$ref": "#/definitions/name"
+							},
+							"joinDate": {
+								"$ref": "#/definitions/joinDate"
+							},
+							"teamCode": {
+								"$ref": "#/definitions/teamCode"
+							},
+							"skills": {
+								"$ref": "#/definitions/skills"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "put": {
+				"tags": ["Employee"],
+				"description": "update Employee",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "updateEmp",
+						"required": ["name", "joinDate", "teamCode","skills"],
+						"in": "body",
+						"properties": {
+							"name": {
+								"$ref": "#/definitions/name"
+							},
+							"joinDate": {
+								"$ref": "#/definitions/joinDate"
+							},
+							"teamCode": {
+								"$ref": "#/definitions/teamCode"
+							},
+							"skills": {
+								"$ref": "#/definitions/skills"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "get": {
+				"tags": ["Employee"],
+				"description": "get all Employee",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"type": "string",
+						"description": "name of the employee",
+						"example": "testEmp",
+						"defaultValue": "testEmp"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "delete": {
+				"tags": ["Employee"],
+				"description": "delete all Employee or by name",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"type": "string",
+						"description": "name of the employee",
+						"example": "testEmp",
+						"defaultValue": "testEmp"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Employee Deleted Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			}
+		},
+        
+        "/task": {
+			"post": {
+				"tags": ["Task"],
+				"description": "Create or update Team",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "createOrUpdateTask",
+						"required": ["code", "name", "description","project","logs"],
+						"in": "body",
+						"properties": {
+                            "code": {
+								"$ref": "#/definitions/code"
+							},
+							"name": {
+								"$ref": "#/definitions/name"
+							},
+							"description": {
+								"$ref": "#/definitions/description"
+							},
+							"project": {
+								"$ref": "#/definitions/project"
+							},
+							"logs": {
+								"$ref": "#/definitions/logs"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": ["Task"],
+				"description": "Create or update Team",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "addLogsToTask",
+						"required": ["code", "logs"],
+						"in": "body",
+						"properties": {
+                            "code": {
+								"$ref": "#/definitions/code"
+							},
+							"logs": {
+								"$ref": "#/definitions/logs"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "get": {
+				"tags": ["Task"],
+				"description": "get all Task",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "code",
+						"in": "query",
+						"type": "string",
+						"description": "code of the Task",
+						"example": "testTask",
+						"defaultValue": "testTask"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			},
+            "delete": {
+				"tags": ["Task"],
+				"description": "delete all Task or by task code",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "code",
+						"in": "query",
+						"type": "string",
+						"description": "code of the task",
+						"example": "testCode",
+						"defaultValue": "testCode"
+					}
+                ],
+				"responses": {
+					"200": {
+						"description": "Employee Deleted Success"
+					},
+					"400": {
+						"description": "Business Exception",
+						"schema": {
+							"$ref": "#/definitions/business_exception"
+						}
+					}
+				}
+			}
+		}
+	},
+	"tags": [
+		{
+			"name": "Employee",
+			"description": "Employee actions"
+		},
+		{
+			"name": "Team",
+			"description": "Team actions"
+		},
+		{
+			"name": "Task",
+			"description": "Task actions"
+		}
+	],
+	"schemes": ["http", "https"],
+	"consumes": ["application/json"],
+	"produces": ["application/json"]
+}

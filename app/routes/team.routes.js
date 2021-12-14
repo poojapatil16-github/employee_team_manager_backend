@@ -10,27 +10,22 @@ module.exports = function(app) {
   });
 
   app.post(
-    "/api/team/create",
-    controller.create
+    "/api/v1/team/",
+    controller.createTeam
   );
 
   app.get(
-    "/api/team/findAll",
-    controller.findAll
+    "/api/v1/team/",
+    controller.findTeams
   );
 
   app.put(
-    "/api/team/update/:name",
-    controller.update
+    "/api/v1/team/",
+    controller.updateTeam
   );
 
   app.delete(
-    "/api/team/deleteAll",
-    controller.deleteAll
-  );
-
-  app.delete(
-    "/api/team/delete/:name",
-    controller.delete
+    "/api/v1/team/",
+    controller.deleteTeam
   );
 };
